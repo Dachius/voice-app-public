@@ -1,0 +1,1 @@
+"""Backend registry. Each backend exposes `async run_turn(conv, text, system_prompt, emit) -> dict` where emit(event: dict) is awaited for streaming events and the returned dict carries the completed assistant message parts, session_id, cost and usage."""

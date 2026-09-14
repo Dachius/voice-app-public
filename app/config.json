@@ -1,0 +1,73 @@
+{
+  "port": 8770,
+  "data_dir": "data",
+  "memory_dir": "/home/claude/.claude/memory",
+  "work_dir": "/home/claude",
+  "claude_cli": "/home/claude/.local/bin/claude",
+  "default_backend": "claude",
+  "tool_permission_policy": "ask",
+  "permission_prompt_timeout_s": 180,
+  "codex_extra_args": ["--approve-for-me"],
+  "claude_idle_close_s": 1800,
+  "claude_max_warm": 4,
+  "_warm_note": "One connected claude process is kept per conversation and reused across turns (measured ~1.3 s/turn vs ~4 s with spawn+resume). Closed after idle_close_s without a turn, or LRU beyond max_warm.",
+  "stt": {
+    "model": "nova-3",
+    "language": "en",
+    "keyterms": ["Claude", "Codex", "Fable", "Anthropic"],
+    "_keyterms_note": "Nova-3 keyterm biasing of the spoken command phrases made Deepgram drop all punctuation (tested); proper nouns are fine.",
+    "usd_per_min": 0.0043
+  },
+  "tts": {
+    "model": "gpt-4o-mini-tts",
+    "voice": "marin",
+    "voices": ["marin", "cedar", "ash", "sage", "coral", "nova", "alloy", "echo", "onyx", "shimmer", "fable", "ballad", "verse"],
+    "format": "mp3",
+    "speed": 1.0,
+    "instructions": "You are reading a thoughtful friend's side of a relaxed conversation aloud. Natural, calm, unhurried, warm; not salesy or performative. Pause briefly between sentences.",
+    "usd_per_1k_chars": 0.017
+  },
+  "voice": {
+    "silence_timeout_s": 20,
+    "unfinished_extra_s": 0,
+    "_timeout_note": "Countdown starts when the last transcript arrives (so add ~1-2 s of VAD hang-off + STT latency to feel it). unfinished_extra_s is added when the composer text does not end in terminal punctuation, i.e. Deepgram thinks you are mid-sentence. Tuning history: started at 4 s, which sent half-thoughts whenever you paused to think; raised in steps, then settled on a flat 20 s regardless of punctuation after finished-looking sentences were still sent mid-thought. \"go ahead\" is the escape hatch, so a long wait costs nothing when you are actually done.",
+    "commands": {
+      "end": ["go ahead", "over", "send it", "that's all", "that is all", "your turn"],
+      "hold": ["hold on", "let me think", "one moment", "one second", "hang on", "give me a moment", "give me a second"],
+      "scratch": ["scratch that", "never mind that", "strike that"]
+    },
+    "mic": {"echoCancellation": true, "noiseSuppression": false, "autoGainControl": false},
+    "_mic_note": "Chrome noise suppression makes Deepgram return unpunctuated transcripts (tested); Nova-3 copes with noise on its own.",
+    "vad": {
+      "model": "v5",
+      "positiveSpeechThreshold": 0.6,
+      "negativeSpeechThreshold": 0.35,
+      "redemptionMs": 900,
+      "preSpeechPadMs": 400,
+      "minSpeechMs": 250
+    }
+  },
+  "backends": {
+    "claude": {
+      "label": "Claude",
+      "default_model": "claude-fable-5-1",
+      "models": [
+        {"id": "claude-fable-5-1", "label": "Fable 5.1"},
+        {"id": "claude-opus-5", "label": "Opus 5"},
+        {"id": "claude-sonnet-5", "label": "Sonnet 5"},
+        {"id": "claude-haiku-4-5-20251001", "label": "Haiku 4.5"}
+      ]
+    },
+    "codex": {
+      "label": "OpenAI (Codex)",
+      "default_model": "gpt-5.6",
+      "models": [
+        {"id": "gpt-6-astra", "label": "GPT-6 Astra"},
+        {"id": "gpt-5.6", "label": "GPT-5.6 Sol"},
+        {"id": "gpt-5.6-terra", "label": "GPT-5.6 Terra"},
+        {"id": "gpt-5.6-luna", "label": "GPT-5.6 Luna"},
+        {"id": "gpt-5.5", "label": "GPT-5.5"}
+      ]
+    }
+  }
+}

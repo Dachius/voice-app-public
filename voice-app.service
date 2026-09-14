@@ -1,0 +1,21 @@
+[Unit]
+Description=Voice App — subscription-backed chat PWA (voice.example.com)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=claude
+Group=claude
+WorkingDirectory=/home/claude/voice-app
+EnvironmentFile=-/home/claude/voice-app/.env
+Environment=PATH=/home/claude/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=HOME=/home/claude
+ExecStart=/home/claude/voice-app/venv/bin/uvicorn server:app --host 127.0.0.1 --port 8770 --ws websockets --log-level info
+Restart=on-failure
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

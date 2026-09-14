@@ -1,0 +1,7 @@
+app/data/
+app/token
+app/.env
+__pycache__/
+*.pyc
+research/tts-samples/*.mp3
+research/tts-samples/*.wav
